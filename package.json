@@ -1,0 +1,21 @@
+{
+  "name": "taskrepo",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "proxy": "http://localhost:3001",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@google-cloud/speech": "^6.3.0",
+    "@google-cloud/translate": "^8.1.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.3",
+    "fluent-ffmpeg": "^2.1.2",
+    "python": "^0.0.4"
+  }
+}
