@@ -4,11 +4,19 @@ const ffmpeg = require('fluent-ffmpeg');
 const app = express();
 const PORT = process.env.PORT || 3001;
 const cors = require('cors');
-const speech = require('@google-cloud/speech');
-const speechClient = new speech.SpeechClient();
+const transcribeAudio = require('./Modules/speechToText');
+const translateText = require('./Modules/translateText');
+const convertTextToSpeech = require('./Modules/textToSpeech')
+const { Storage } = require('@google-cloud/storage');
+const vision = require('@google-cloud/vision');
+const storage = new Storage();
+const bucketName = 'marcosargiottitask';
+const path = require('path');
+const client = new vision.ImageAnnotatorClient();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
   res.send('Server is running');
@@ -65,26 +73,112 @@ app.get('/video/metadata', (req, res) => {
 });
 
 app.get('/video/audio', (req, res) => {
-  const videoUrl = req.query.url;  // Assume the front end sends the video URL as a query parameter
-  const audioPath = `audio-${Date.now()}.mp3`; // Unique filename for the audio clip
+  const videoUrl = req.query.url;
+  const audioFileName = `audio-buffer.mp3`;
 
   ffmpeg(videoUrl)
-    .audioCodec('libmp3lame') // Use MP3 codec
-    .noVideo() // No video stream in the output
-    .setStartTime('00:00:30') // Start at 30 seconds
-    .setDuration(15) // Duration of 15 seconds
-    .saveToFile(audioPath) // Save the file temporarily
-    .on('end', () => {
-      // Once file is saved, send it in response
-      res.download(audioPath, () => {
-        // Optional: Delete the file after sending it to the client
-        fs.unlinkSync(audioPath);
-      });
+    .audioCodec('libmp3lame')
+    .noVideo()
+    .setStartTime('00:00:30')
+    .setDuration(15)
+    .saveToFile(audioFileName)
+    .on('end', async () => {
+      try {
+        await uploadFileToGCS(audioFileName, audioFileName);
+        res.send({ message: 'Audio processed and uploaded to GCS', url: `https://storage.googleapis.com/marcosargiottitask/${audioFileName}` });
+      } catch (uploadError) {
+        console.error('Error uploading to GCS:', uploadError.message);
+        res.status(500).send('Error uploading audio to GCS');
+      }
     })
     .on('error', (err) => {
       console.error('Error processing video:', err.message);
       res.status(500).send('Error processing video');
     });
+});
+
+async function uploadFileToGCS(filePath, destFileName) {
+  const { Storage } = require('@google-cloud/storage');
+  const storage = new Storage();
+  const bucketName = 'marcosargiottitask';
+
+  await storage.bucket(bucketName).upload(filePath, {
+    destination: destFileName,
+  });
+
+  console.log(`${filePath} uploaded to ${bucketName}`);
+}
+
+app.post('/processAudio', async (req, res) => {
+  try {
+    const transcription = await transcribeAudio("gs://marcosargiottitask/audio-buffer.mp3");
+    
+    const translation = await translateText(transcription, 'es');
+    res.json({ transcription, translation });
+  } catch (error) {
+    console.error(`Error processing audio: ${error.message}`);
+    res.status(500).send(`Error processing audio: ${error.message}`);
+  }
+});
+
+app.post('/convertTextToSpeech', async (req, res) => {
+  const { text } = req.body;
+
+  try {
+    const audioContent = await convertTextToSpeech(text, 'es-ES');
+    res.send(Buffer.from(audioContent, 'base64'));
+  } catch (error) {
+    console.error(`Error during text-to-speech conversion: ${error.message}`);
+    res.status(500).send(`Error during text-to-speech conversion: ${error.message}`);
+  }
+});
+
+app.get('/video/first-frame', async (req, res) => {
+  const videoUrl = req.query.url;
+  const frameFileName = 'first-frame.jpg';
+  const frameOutputPath = path.join(__dirname, frameFileName);
+
+  ffmpeg(videoUrl)
+    .frames(1)
+    .output(frameOutputPath)
+    .on('end', async () => {
+      console.log('First frame extracted');
+      try {
+        await fs.promises.access(frameOutputPath, fs.constants.F_OK);
+        await uploadFileToGCS(frameOutputPath, frameFileName);
+        const publicUrl = `https://storage.googleapis.com/${bucketName}/${frameFileName}`;
+        res.json({ imageUrl: publicUrl });
+      } catch (error) {
+        console.error("Error with file operation or GCS upload:", error);
+        res.status(500).send("Error processing the image file");
+      }
+    })
+    .on('error', (err) => {
+      console.error('Error extracting first frame:', err);
+      res.status(500).send('Error extracting first frame');
+    })
+    .run();
+});
+
+app.get('/performOCR', async (req, res) => {
+  // Assuming the image file name is known and stored in your bucket
+  const frameFileName = 'first-frame.jpg';
+
+  try {
+    // Specify the GCS URI of the image
+    const gcsUri = `gs://${bucketName}/${frameFileName}`;
+
+    // Performs text detection on the image file
+    const [result] = await client.textDetection(gcsUri);
+    const detections = result.textAnnotations;
+    console.log('Text:', detections[0]?.description);
+
+    // Send the first annotation (full image annotation) back to the frontend
+    res.json({ text: detections[0]?.description || '' });
+  } catch (error) {
+    console.error('Failed to perform OCR:', error);
+    res.status(500).send(`Failed to perform OCR: ${error.message}`);
+  }
 });
 
 function fetchMetadata(videoUrl, res) {
@@ -95,9 +189,8 @@ function fetchMetadata(videoUrl, res) {
     }
 
     const videoStream = metadata.streams.find(stream => stream.codec_type === 'video');
-    const durationSeconds = Math.round(metadata.format.duration);
+    const durationSeconds = parseFloat(metadata.format.duration).toFixed(2);
     const videoHeight = videoStream ? videoStream.height : 'Unknown';
-    console.log('The metadata from the video is',metadata)
     res.json({
       duration: durationSeconds,
       videoHeight: videoHeight,
