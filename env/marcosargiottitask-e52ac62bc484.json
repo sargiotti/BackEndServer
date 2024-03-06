@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "marcosargiottitask",
+  "private_key_id": "e52ac62bc48408030aa081ba606cfb971e39a281",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC91utZnzGjOxrl\nfPBFNJglujytUmOFq0vpx8Lt2XTRpsNyF5TjMhcD6+zejh4L2gYB4vzSmxWdQMQJ\nKvlrMrEZ5BfEVhT9APwz1jJwEDzq3mhWP3pvuG/IcYwjrNbK5bXZenbBIt6WR+ck\nfRMPUBN6fVmH/CV2XRk6k4dpgz+P7ymadK5ND9iQe0JPL/Xxxmqyt++oJSkjBwpR\nLzcsw6vwQpzrTlkDGD2LBvpc7czgXT5rbhwgomU8JavoJ2X9GBR3Hf06jBykx1NQ\nFeo9uFFb2hGZyUqB9g+yBc3Ezwv8Ii6AjH12Bsju/2nPv0hjORV6AT6VjO+d/KOl\nquvztj8rAgMBAAECggEAAoh8InmD1YxD2x0ULbA6eYJnLd7kEhQLksaGHNtieiux\n/vM+mtt/wB8lTYDy+LCDlQHc4siL/Mmw8/hdVKdcAp7vDEEjzY52TxDEIoes8Gtg\nVApLzXLWFwQg3RcA1LtE9m5yaDhZZQL3nB6JIxKr9931VGGydEZgwE3YqDlGn1qJ\nOPVyB8QoSRaDNQ2ABNLjzvSoQD2sjjMNdTRSe8eN/AOUk5ymaLrCJMTsBiIwaHiJ\nTB+Vqrii7y1JQl+nP9z2xYxWEYS9b1JpImGaxYpbK+pR9Nu8GbhYI19dc7EV9jt7\nrApdFkyTYvn27OQA38+3QrzH5rgoIxaXoMP8tXcjaQKBgQDxAo3C7+s7ELMGG3u7\ngr/IlMbMUMcnhPqnVlNWDuXz45gLxtwksNQPRPUAX8Pe/lqdxA0DYoM6xu1A0Jlf\nE0qAmKGUPh0aBFqsu/6jPsWuT7EopAkbAc1Lkx9alGpw9Eh1Hj/f8LXr+30CgNNV\n3AMHCo1VEK4lk0sjFUyHjS72EwKBgQDJpZyRI2smbdZ+MgiEG+oy6+TIVFC/Dm2t\nHSx5T57ZZs+SZ0VDSUntIZrkdNTgXru0zlkblJxEII3qrebWUFhxUoZ5tvbay8uC\nx2WKSIi/8vyY/XPK9UVZgBaoKHpeoiPQplnATxyOCvjYWQrA9pJk9A0ezCKZqwwK\nocDCh6cViQKBgE1lWoz9avce177gWI3Q4THSxTybvDjutWfDiyOZyTLXJd6yT8Pg\nnVkB9gPWvRoBaKw9Z0hs/GOFum8UDgzALy641Tq777CJMW1DOfTGlcjygpvggaQQ\nohLg/jKicsQvTo1911lc/a74ph6FrFhoPPin5NcqciJS+NAdaOQm7KvNAoGAE2DA\n7Qm0UFsZ08LHIrr0BLS6pa3EnLesPoihL39BSq8gn3chJtgyLIGgOvgnRPCVpUh3\nM7lSUxG10amol0vdU/aUSboVeu0+v3CeB231Bk05jRI+QHDVm0Y95ycMq291daWm\n1l5D5jqTs2bLK8QGSYFSiXUglhfj7lmhBpC2s9ECgYAqX5veoesnM+nt+RL129Db\nK44KcR6Fe1vCtcK0MkhNQe0v36vkC0+mcEjAizB7ZQaojscnHlFayDXr42W3LuSu\nauGJxf9vlOIaaNW76O348hTr6NUNNeZPq5HLdvfgZFLv4FcjpbKgkqJ62i+PE1zE\ndsU20QZoZmT813u84sVkrA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "owner-664@marcosargiottitask.iam.gserviceaccount.com",
+  "client_id": "100418405455347360363",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/owner-664%40marcosargiottitask.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
