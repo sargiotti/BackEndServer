@@ -14,7 +14,9 @@ const bucketName = 'marcosargiottitask';
 const path = require('path');
 const client = new vision.ImageAnnotatorClient();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://sargiotti.github.io'
+}));
 app.use(express.json());
 app.use(express.static('public'));
 
