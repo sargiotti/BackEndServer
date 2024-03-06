@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const ffmpeg = require('fluent-ffmpeg');
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 3000;
 const cors = require('cors');
 const transcribeAudio = require('./Modules/speechToText');
 const translateText = require('./Modules/translateText');
@@ -14,9 +14,7 @@ const bucketName = 'marcosargiottitask';
 const path = require('path');
 const client = new vision.ImageAnnotatorClient();
 
-app.use(cors({
-  origin: 'https://sargiotti.github.io'
-}));
+app.use(cors());
 app.use(express.json());
 app.use(express.static('public'));
 
